@@ -2,9 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Matrix Rain</title>
+<title>Matrix</title>
 
-<!-- Mobile fullscreen support -->
 <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, user-scalable=no">
 
 <style>
@@ -27,23 +26,36 @@
 const canvas = document.getElementById("matrix");
 const ctx = canvas.getContext("2d");
 
-function resizeCanvas() {
+function resize() {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
 }
-resizeCanvas();
-window.addEventListener("resize", resizeCanvas);
+resize();
+window.addEventListener("resize", resize);
 
 const chars = "アァカサタナハマヤャラワン0123456789";
 const fontSize = window.innerWidth < 768 ? 14 : 16;
 let columns = Math.floor(canvas.width / fontSize);
 let drops = Array(columns).fill(1);
 
+// 🔥 COLORS (tap to cycle)
+const colors = ["#00ff00", "#00ffff", "#ff0000", "#ff00ff", "#ffff00"];
+let colorIndex = 0;
+
+// 👆 Tap / click to change color
+document.addEventListener("click", () => {
+  colorIndex = (colorIndex + 1) % colors.length;
+});
+
+// ✨ YOUR NAME HERE
+const nameText = "STANLEY";
+
 function draw() {
   ctx.fillStyle = "rgba(0, 0, 0, 0.08)";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  ctx.fillStyle = "#00ff00";
+  // Matrix rain
+  ctx.fillStyle = colors[colorIndex];
   ctx.font = fontSize + "px monospace";
 
   for (let i = 0; i < drops.length; i++) {
@@ -55,6 +67,17 @@ function draw() {
     }
     drops[i]++;
   }
+
+  // 🌟 Glowing name
+  ctx.save();
+  ctx.font = "bold 48px monospace";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.shadowColor = colors[colorIndex];
+  ctx.shadowBlur = 25;
+  ctx.fillStyle = colors[colorIndex];
+  ctx.fillText(nameText, canvas.width / 2, canvas.height / 2);
+  ctx.restore();
 }
 
 setInterval(draw, 40);
