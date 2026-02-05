@@ -3,91 +3,62 @@
 <head>
 <meta charset="UTF-8">
 <title>Matrix Rain</title>
+
+<!-- Mobile fullscreen support -->
+<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, user-scalable=no">
+
 <style>
-
   html, body {
-
     margin: 0;
-
     padding: 0;
-
     background: black;
-
     overflow: hidden;
-
   }
-
   canvas {
-
     display: block;
-
   }
 </style>
 </head>
 <body>
+
 <canvas id="matrix"></canvas>
+
 <script>
-
 const canvas = document.getElementById("matrix");
-
 const ctx = canvas.getContext("2d");
 
-canvas.width = window.innerWidth;
-
-canvas.height = window.innerHeight;
-
-const letters = "アァカサタナハマヤャラワン0123456789";
-
-const fontSize = 16;
-
-const columns = canvas.width / fontSize;
-
-const drops = [];
-
-for (let x = 0; x < columns; x++) {
-
-  drops[x] = Math.random() * canvas.height;
-
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
 }
+resizeCanvas();
+window.addEventListener("resize", resizeCanvas);
+
+const chars = "アァカサタナハマヤャラワン0123456789";
+const fontSize = window.innerWidth < 768 ? 14 : 16;
+let columns = Math.floor(canvas.width / fontSize);
+let drops = Array(columns).fill(1);
 
 function draw() {
-
-  ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
-
+  ctx.fillStyle = "rgba(0, 0, 0, 0.08)";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   ctx.fillStyle = "#00ff00";
-
   ctx.font = fontSize + "px monospace";
 
   for (let i = 0; i < drops.length; i++) {
-
-    const text = letters.charAt(Math.floor(Math.random() * letters.length));
-
+    const text = chars[Math.floor(Math.random() * chars.length)];
     ctx.fillText(text, i * fontSize, drops[i] * fontSize);
 
-    if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
-
+    if (drops[i] * fontSize > canvas.height && Math.random() > 0.98) {
       drops[i] = 0;
-
     }
-
     drops[i]++;
-
   }
-
 }
 
-setInterval(draw, 33);
-
-window.onresize = () => {
-
-  canvas.width = window.innerWidth;
-
-  canvas.height = window.innerHeight;
-
-};
+setInterval(draw, 40);
 </script>
+
 </body>
 </html>
- 
